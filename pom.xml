@@ -10,6 +10,7 @@
     <modules>
         <module>boot-with-axon</module>
         <module>boot-with-cloud</module>
+        <module>boot-with-web</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -19,13 +20,14 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.optimize>true</maven.compiler.optimize>
         <failOnMissingWebXml>false</failOnMissingWebXml>
+        <docker.image.prefix>springcloud</docker.image.prefix>
 
-        <java.version>1.7</java.version>
-        <groovy.version>2.4.3</groovy.version>
+        <java.version>1.8</java.version>
+        <groovy.version>2.4.4</groovy.version>
         <scala.version>2.11.6</scala.version>
         <tomcat.version>8.0.23</tomcat.version>
-        <spring-boot.version>1.2.3.RELEASE</spring-boot.version>
-        <axon.version>2.4.1</axon.version>
+        <spring-boot.version>1.2.5.RELEASE</spring-boot.version>
+        <axon.version>2.4.2</axon.version>
     </properties>
 
     <dependencyManagement>
@@ -87,6 +89,22 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.4</version>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.2.3</version>
+                <configuration>
+                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
